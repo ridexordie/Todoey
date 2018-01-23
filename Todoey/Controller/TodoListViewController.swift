@@ -19,7 +19,7 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
      
-        seed()
+        loadItems()
         
 //        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
 //            itemArray = items
@@ -103,71 +103,21 @@ class TodoListViewController: UITableViewController {
             let data = try encoder.encode(self.itemArray)
             try data.write(to: self.dataFilePath!)
         }catch {
-            print("Error: \(error)")
+            print("Save Error: \(error)")
         }
         
         self.tableView.reloadData()
     }
     
-    
-    //MARK - SEED DATA
-    func seed() {
-        let newItem = Item()
-        newItem.title = "Find Mike"
-        newItem.done = true
-        itemArray.append(newItem)
-        
-        let newItem2 = Item()
-        newItem2.title = "Call boss"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "Buy eggs"
-        itemArray.append(newItem3)
-        
-        let newItem4 = Item()
-        newItem4.title = "Repair car"
-        itemArray.append(newItem4)
-        
-        let newItem5 = Item()
-        newItem5.title = "Paint the wall"
-        itemArray.append(newItem5)
-        
-        let newItem6 = Item()
-        newItem6.title = "Buy 2 tickets to Iron Maiden"
-        itemArray.append(newItem6)
-        
-        let newItem7 = Item()
-        newItem7.title = "Eat dinner"
-        itemArray.append(newItem7)
-        
-        let newItem8 = Item()
-        newItem8.title = "Drink Vodka"
-        itemArray.append(newItem8)
-        
-        let newItem9 = Item()
-        newItem9.title = "Work iOS"
-        itemArray.append(newItem9)
-        
-        let newItem10 = Item()
-        newItem10.title = "Watch the BJK"
-        itemArray.append(newItem10)
-        
-        let newItem11 = Item()
-        newItem11.title = "Set the alarm"
-        itemArray.append(newItem11)
-        
-        let newItem12 = Item()
-        newItem12.title = "Sleep at 01:00"
-        itemArray.append(newItem12)
-        
-        let newItem13 = Item()
-        newItem13.title = "Drink water"
-        itemArray.append(newItem13)
-        
-        let newItem14 = Item()
-        newItem14.title = "Brush your teeth"
-        itemArray.append(newItem14)
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+                itemArray = try decoder.decode([Item].self, from: data)
+            }catch {
+                print("Load Error: \(error)")
+            }
+        }
     }
     
 }
